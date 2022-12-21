@@ -7,10 +7,11 @@ import { join } from 'path';
 import { setupMedia } from './config/media/media.config';
 import { setupConsole } from './config/console/console.config';
 import { setupSwagger } from './config/swagger/swagger.config';
+import { setupDiscord } from './config/discord/discord.config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    // logger: ['error', 'warn', 'debug'],
+    logger: ['error', 'warn', 'debug'],
     cors: true,
   });
   const globalPrefix = 'v1';
@@ -26,6 +27,7 @@ async function bootstrap() {
   setupMedia(app);
   setupConsole(app);
   setupSwagger(app);
+  setupDiscord(app);
   await app.listen(port);
 }
 
