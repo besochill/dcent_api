@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
-import { BaseEntity } from './base.entity';
+import {Column, Entity, OneToOne, PrimaryColumn, RelationOptions} from 'typeorm';
+import { BaseEntity } from './base/base.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Profile } from './profile.entity';
 
 @Entity('users', { schema: 'dca' })
 export class User extends BaseEntity {
@@ -34,4 +35,5 @@ export class User extends BaseEntity {
   @Column()
   @ApiProperty()
   isStaff: boolean;
+  profile: Profile;
 }
