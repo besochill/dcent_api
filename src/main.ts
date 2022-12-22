@@ -11,7 +11,7 @@ import { setupDiscord } from './config/discord/discord.config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: ['error', 'warn', 'debug'],
+    // logger: ['error', 'warn', 'debug'],
     cors: true,
   });
   const globalPrefix = 'v1';

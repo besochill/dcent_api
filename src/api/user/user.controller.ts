@@ -1,22 +1,17 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from './entities/user.entity';
 
 @ApiTags('User Controller')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('me')
-  async getUser(user: User): Promise<{
-    firstname: string;
-    email: string;
-    username: string;
-    lastname: string;
-  }> {
-    return this.userService.getUser(user);
+  async getMe(@Param('username') username: string) {
+    return this.userService.getMe(username);
   }
 
   @UseGuards(AuthGuard('jwt'))

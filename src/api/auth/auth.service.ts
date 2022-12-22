@@ -3,21 +3,29 @@ import { LoginDto } from './dto/login.dto';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/createUser.dto';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+  ) {}
+
+  async validateUser(username: string, password: string, email: string) {
+    const [user] = await Promise.all([this.userService.findUser(email)]);
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+
   async login(loginDto: LoginDto): Promise<any> {
-    const user = await this.userService.findUser(loginDto.username);
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-    if (await bcrypt.compare(loginDto.password, user.password)) {
-      user.password = undefined;
-      return user;
-    } else {
-      throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
-    }
+    const payload = { username: loginDto.username, sub: loginDto.password };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 
   async register(createUserDto: CreateUserDto): Promise<any> {

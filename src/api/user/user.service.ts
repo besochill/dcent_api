@@ -67,12 +67,11 @@ export class UserService {
     delete this.streamingTime[key];
   }
 
-  getUser(profile: User) {
-    return {
-      username: profile.username,
-      firstname: profile.firstname,
-      lastname: profile.lastname,
-      email: profile.email,
-    };
+  async getMe(user: string) {
+    return await this.usersRepository.findOne({
+      where: {
+        username: user,
+      },
+    });
   }
 }
